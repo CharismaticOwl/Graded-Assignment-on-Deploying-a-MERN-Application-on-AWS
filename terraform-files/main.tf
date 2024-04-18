@@ -63,3 +63,80 @@ resource "aws_route_table_association" "private_route_association" {
   subnet_id      = aws_subnet.private_subnet.id
   route_table_id = aws_route_table.private_route.id
 }
+
+resource "aws_security_group" "web_server_SG" {
+  name = "SG for web server"
+  description = "SG for web server"
+  vpc_id = aws_vpc.assignment_vpc.id
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["223.233.80.197/32"]
+  }
+
+  tags = {
+    Name = "web_server_SG"
+  }
+}
+
+resource "aws_security_group" "database_server_SG" {
+  name = "SG for database server"
+  description = "SG for database server"
+  vpc_id = aws_vpc.assignment_vpc.id
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["223.233.80.197/32"]
+  }
+
+  tags = {
+    Name = "database_server_SG"
+  }
+}
+
+resource "aws_instance" "web_server" {
+  ami = var.AMI
+  instance_type = var.instance_type
+  subnet_id = aws_subnet.public_subnet.id
+  key_name = "ec2"
+  vpc_security_group_ids = [aws_security_group.web_server_SG.id]
+  tags = {
+    Name = "web_server"
+  }
+}
+
+resource "aws_instance" "database" {
+  ami = var.AMI
+  instance_type = var.instance_type
+  key_name = "ec2"
+  subnet_id = aws_subnet.private_subnet.id
+  vpc_security_group_ids = [aws_security_group.database_server_SG.id]
+  tags = {
+    Name = "database"
+  }
+}
