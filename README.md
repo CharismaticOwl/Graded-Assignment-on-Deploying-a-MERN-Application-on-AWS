@@ -136,3 +136,37 @@ Now defined route table association so that it can be attached to the public and
 
 This completed our 2nd task
 
+3. EC2 Instance Provisioning:
+
+   - Launch two EC2 instances: one in the public subnet (for the web server) and another in the private subnet (for the database).
+
+   - Ensure both instances are accessible via SSH (public instance only accessible from your IP).
+
+4. Security Groups and IAM Roles:
+
+   - Create necessary security groups for web and database servers.
+
+   - Set up IAM roles for EC2 instances with required permissions.
+
+Solution:
+
+Added resource aws security group to the main.tf file
+
+Added the ingress and egress rules
+
+Made sure that the web server security group, egress has internet access and in ingress it has open ports at 80, and 22 from myIP
+
+Made sure that the database server security group, egress has internet access and in ingress it has open ports at 22 from myIP - any resource within the vpc should be able access the database server.
+
+Created a IAM role for ec2, gave full access in the role for all resources in AWS
+
+Also created an instance profile, attached the role to the policy
+
+Created ec2 instances for web server and also database server
+
+5. Resource Output:
+
+   - Output the public IP of the web server EC2 instance.
+
+
+

@@ -29,11 +29,11 @@ variable "private_subnet_az" {
 }
 
 variable "AMI" {
-  type = string
+  type    = string
   default = "ami-007020fd9c84e18c7"
 }
 
 variable "instance_type" {
-  type = string
+  type    = string
   default = "t3.micro"
 }

@@ -65,28 +65,28 @@ resource "aws_route_table_association" "private_route_association" {
 }
 
 resource "aws_security_group" "web_server_SG" {
-  name = "SG for web server"
+  name        = "SG for web server"
   description = "SG for web server"
-  vpc_id = aws_vpc.assignment_vpc.id
+  vpc_id      = aws_vpc.assignment_vpc.id
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["223.233.80.197/32"]
   }
 
@@ -96,21 +96,21 @@ resource "aws_security_group" "web_server_SG" {
 }
 
 resource "aws_security_group" "database_server_SG" {
-  name = "SG for database server"
+  name        = "SG for database server"
   description = "SG for database server"
-  vpc_id = aws_vpc.assignment_vpc.id
+  vpc_id      = aws_vpc.assignment_vpc.id
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["223.233.80.197/32"]
   }
 
@@ -119,22 +119,46 @@ resource "aws_security_group" "database_server_SG" {
   }
 }
 
+resource "aws_iam_role" "web_server_role" {
+  name = "web_server_role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_instance_profile" "web_server_profile" {
+  name = "web_server_profile"
+  role = aws_iam_role.web_server_role.name
+}
+
 resource "aws_instance" "web_server" {
-  ami = var.AMI
-  instance_type = var.instance_type
-  subnet_id = aws_subnet.public_subnet.id
-  key_name = "ec2"
-  vpc_security_group_ids = [aws_security_group.web_server_SG.id]
+  ami                         = var.AMI
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public_subnet.id
+  key_name                    = "ec2"
+  associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.web_server_profile.name
+  vpc_security_group_ids      = [aws_security_group.web_server_SG.id]
   tags = {
     Name = "web_server"
   }
 }
 
 resource "aws_instance" "database" {
-  ami = var.AMI
-  instance_type = var.instance_type
-  key_name = "ec2"
-  subnet_id = aws_subnet.private_subnet.id
+  ami                    = var.AMI
+  instance_type          = var.instance_type
+  key_name               = "ec2"
+  subnet_id              = aws_subnet.private_subnet.id
   vpc_security_group_ids = [aws_security_group.database_server_SG.id]
   tags = {
     Name = "database"
