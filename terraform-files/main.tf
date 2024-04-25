@@ -87,7 +87,7 @@ resource "aws_security_group" "web_server_SG" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["223.233.80.197/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -111,7 +111,7 @@ resource "aws_security_group" "database_server_SG" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["223.233.80.197/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -163,4 +163,8 @@ resource "aws_instance" "database" {
   tags = {
     Name = "database"
   }
+}
+
+output "public_ip_for_web_server" {
+  value = aws_instance.web_server.public_ip
 }
