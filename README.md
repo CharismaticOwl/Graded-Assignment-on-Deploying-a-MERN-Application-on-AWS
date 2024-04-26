@@ -173,3 +173,124 @@ using output option in terraform, was able to output the public ip address for t
 ### This has completed our task one.
 ### screenshots attached for the deployment using terraform
 -------------------------------------------------------------------------------
+
+##### Part 2: Configuration and Deployment with Ansible
+
+Solution:
+
+1. Ansible Configuration:
+
+   - Configure Ansible to communicate with the AWS EC2 instances.
+
+-> Logged into aws console
+
+Created an ec2 machine and installed anisble in it
+
+Made sure that the ansible controller is inside the same vpc
+
+Userdata - 
+
+```
+#!/bin/bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install ansible git -y
+```
+
+2. Web Server Setup:
+
+   - Write an Ansible playbook to install Node.js and NPM on the web server.
+
+   - Clone the MERN application repository and install dependencies.
+
+3. Database Server Setup:
+
+   - Install and configure MongoDB on the database server using Ansible.
+
+   - Secure the MongoDB instance and create necessary users and databases.
+
+4. Application Deployment:
+
+   - Configure environment variables and start the Node.js application.
+
+   - Ensure the React frontend communicates with the Express backend.
+
+
+Solution:
+
+Created a directory to store the ansible files
+
+```
+mkdir ansible-files
+```
+
+Created inventory.ini to store the web-server and database ip addresses
+
+```
+vim inventory.ini
+
+stored the below addresses as follows - 
+
+[web_servers]
+web_server ansible_host=43.205.243.63
+
+[db_servers]
+db_server ansible_host=10.0.2.200
+```
+
+Once this is done, created a yml file for the play book.
+
+```
+vim playbook.yml
+```
+
+Inside the playbook
+
+- First define the hosts as web_servers
+
+- Later become - yes, so that the commands can be run as sudo
+
+- First task is to Install Node.js and NPM
+
+- second Clone MERN application repository
+
+- Changed the hosts now to database servers
+
+- Later become - yes, so that the commands can be run as sudo
+
+- We shall install the mongoDB
+
+- mongoDB installtion was done using community edition documentation
+
+### The environment variables are already defined inside the application folders, hence not mentioning them here, If needed additional tasks can be created to change the port and urls
+
+- Changed the hosts back again to web_servers
+
+- Later become - yes, so that the commands can be run as sudo
+
+- the tasks is to simply run the backend and frontend nodeJS application.
+
+
+----
+
+SSH into ansible-controller
+
+```
+cd Graded-Assignment-on-Deploying-a-MERN-Application-on-AWS/ansible-files
+
+vim ec2.pem
+
+copy pasted the private key, so that the webservers database can be accessed using the keypair
+
+chmod 700 ec2.pem
+```
+
+### FINALLY run
+
+```
+ansible-playbook playbook.yml -i inventory.ini --user ubuntu --key-file ./ec2.pem
+```
+
+### This completes the entire project.
+
+###### Thank you!!!
+--------------------------------------------------------------------
