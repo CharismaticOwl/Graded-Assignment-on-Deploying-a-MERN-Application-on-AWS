@@ -14,16 +14,16 @@
         repo: 'https://github.com/CharismaticOwl/Graded-Assignment-on-Deploying-a-MERN-Application-on-AWS.git'
         dest: /var/www/mern-app
 
-# # Database Server Setup
-# - hosts: db_servers
-#   become: yes
-#   tasks:
-#     - name: Install MongoDB
-#       shell: |
-#         wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
-#         echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
-#         sudo apt-get update
-#         sudo apt-get install -y mongodb-org
+# Database Server Setup
+- hosts: db_servers
+  become: yes
+  tasks:
+    - name: Install MongoDB
+      shell: |
+        wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+        sudo apt-get update
+        sudo apt-get install -y mongodb-org
 
 # # Application Deployment
 # - hosts: web_servers
