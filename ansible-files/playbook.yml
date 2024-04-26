@@ -37,9 +37,11 @@
     - name: Start Node.js application
       shell: |
         cd /var/www/mern-app/backend
+        npm install
         node index.js
 # Frontend Application Deployment
     - name: Start Node.js application
       shell: |
         cd /var/www/mern-app/frontend
+        npm install
         npm start
