@@ -37,3 +37,8 @@ variable "instance_type" {
   type    = string
   default = "t3.micro"
 }
+
+variable "MyIP"{
+  type = string
+  default = "117.99.192.124/32"
+}

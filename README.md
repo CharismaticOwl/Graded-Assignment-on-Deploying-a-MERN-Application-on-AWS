@@ -168,5 +168,8 @@ Created ec2 instances for web server and also database server
 
    - Output the public IP of the web server EC2 instance.
 
+using output option in terraform, was able to output the public ip address for the web server and private ip for database server.
 
-
+### This has completed our task one.
+### screenshots attached for the deployment using terraform
+-------------------------------------------------------------------------------
