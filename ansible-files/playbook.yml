@@ -37,12 +37,12 @@
     - name: Start Node.js application
       shell: |
         cd /var/www/mern-app/backend
-        npm install
-        npm install pm2 -g
-        pm2 start index.js
+        sudo npm install
+        sudo npm install pm2 -g
+        sudo pm2 start index.js
 # Frontend Application Deployment
     - name: Start Node.js application
       shell: |
         cd /var/www/mern-app/frontend
-        npm install
-        nohup npm start &
+        sudo npm install
+        sudo nohup npm start &

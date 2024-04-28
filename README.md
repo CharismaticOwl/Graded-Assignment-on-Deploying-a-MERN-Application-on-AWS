@@ -287,9 +287,9 @@ chmod 700 ec2.pem
 ### FINALLY run
 
 ```
-ansible-playbook playbook.yml -i inventory.ini --user ubuntu --key-file ./ec2.pem
+ansible-playbook playbook.yml -i inventory.ini --user ubuntu --key-file ./ec2.pem --verbose
 ```
-
+Used --verbose to get detailed output
 ### This completes the entire project.
 
 ###### Thank you!!!
